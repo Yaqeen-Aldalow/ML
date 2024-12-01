@@ -1,0 +1,42 @@
+stages:
+  prepare:
+    cmd: python prepare.py
+    deps:
+      - data/raw/movies.csv
+      - data/raw/ratings.csv
+      - data/raw/users.csv
+    outs:
+      - data/processed/
+
+  train_collaborative:
+    cmd: python ml_models/collaborative_filtering.py
+    deps:
+      - data/processed/
+    params:
+      - model.collaborative
+    outs:
+      - ml_models/saved_models/collaborative_model.pkl
+    metrics:
+      - metrics/collaborative.json
+
+  train_content_based:
+    cmd: python ml_models/content_based.py
+    deps:
+      - data/processed/
+    params:
+      - model.content_based
+    outs:
+      - ml_models/saved_models/content_based_model.pkl
+    metrics:
+      - metrics/content_based.json
+
+  train_matrix_factorization:
+    cmd: python ml_models/matrix_factorization.py
+    deps:
+      - data/processed/
+    params:
+      - model.matrix_factorization
+    outs:
+      - ml_models/saved_models/matrix_factorization_model.pkl
+    metrics:
+      - metrics/matrix_factorization.json

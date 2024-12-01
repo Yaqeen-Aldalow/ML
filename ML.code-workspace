@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../../../ML/templates"
+		},
+		{
+			"path": "../../../ML/.venv"
+		}
+	],
+	"settings": {}
+}

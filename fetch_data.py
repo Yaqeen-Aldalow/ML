@@ -45,14 +45,12 @@ def save_to_csv(movies, filename="movies.csv"):
     print(f"Movies saved to {filename}")
 
 if __name__ == "__main__":
-    genre_id = 35 
+    genre_id = 35  # يمكن تغيير الـ genre_id حسب الحاجة
     all_movies = []
     
- 
-    for page in range(1, 6): 
+    for page in range(1, 6):  # جلب 5 صفحات
         data = fetch_movies(genre_id, page)
         if data:
             all_movies.extend(data["results"])
-    
     
     save_to_csv(all_movies)

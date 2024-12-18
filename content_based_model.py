@@ -1,14 +1,16 @@
+import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# استخدام TF-IDF لتحويل الوصف أو الأنواع إلى تمثيل عددي
-tfidf = TfidfVectorizer(stop_words='english')
+# تحميل البيانات النظيفة
+movies_df = pd.read_csv("clean_movies.csv")
 
-# تحويل الأنواع (genre) إلى تمثيل عددي
-movies_df['genres'] = movies_df['genres'].fillna('')
+# استخدام TF-IDF لتحويل الأنواع إلى تمثيل عددي
+tfidf = TfidfVectorizer(stop_words='english')
+movies_df['genres'] = movies_df['genre_ids'].fillna('')
 tfidf_matrix = tfidf.fit_transform(movies_df['genres'])
 
-# حساب التشابه باستخدام cosine similarity
+# حساب التشابه باستخدام Cosine Similarity
 cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
 # وظيفة للحصول على الأفلام الأكثر تشابهًا مع فيلم معين

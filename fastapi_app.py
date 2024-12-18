@@ -1,22 +1,40 @@
-# fastapi_app.py
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.pairwise import cosine_similarity
 
 app = FastAPI()
 
+# تحميل البيانات النظيفة
+movies_df = pd.read_csv("clean_movies.csv")
+
+# تحويل الأنواع (genres) إلى تمثيل عددي باستخدام TF-IDF
+tfidf = TfidfVectorizer(stop_words='english')
+movies_df['genres'] = movies_df['genre_ids'].fillna('')
+tfidf_matrix = tfidf.fit_transform(movies_df['genres'])
+
+# حساب التشابه باستخدام Cosine Similarity
+cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
+
 # تعريف نموذج الطلب
 class RecommendationRequest(BaseModel):
-    user_id: int
-    n_recommendations: int
+    title: str
+
+# دالة للحصول على الأفلام الأكثر تشابهًا مع فيلم معين
+def get_recommendations(title, cosine_sim=cosine_sim):
+    try:
+        idx = movies_df.index[movies_df['title'] == title].tolist()[0]
+        sim_scores = list(enumerate(cosine_sim[idx]))
+        sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+        sim_scores = sim_scores[1:11]
+        movie_indices = [i[0] for i in sim_scores]
+        return movies_df['title'].iloc[movie_indices].tolist()
+    except IndexError:
+        return []
 
 @app.post("/recommend/")
 async def recommend_movies(req: RecommendationRequest):
-    # هنا يمكن إضافة الكود الذي يقوم بتوليد التوصيات بناءً على user_id و n_recommendations
-    recommended_movies = [
-        "Movie 1", "Movie 2", "Movie 3", "Movie 4", "Movie 5", 
-        "Movie 6", "Movie 7", "Movie 8", "Movie 9", "Movie 10"
-    ]
-    
-    # إرجاع التوصيات
-    return {"movies": recommended_movies}
+    recommendations = get_recommendations(req.title, cosine_sim)
+    return {"recommended_movies": recommendations}

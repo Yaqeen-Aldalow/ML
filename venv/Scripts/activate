@@ -38,7 +38,11 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
+<<<<<<< Updated upstream
 VIRTUAL_ENV="C:\Users\yaqee\Desktop\ML\ML\venv"
+=======
+VIRTUAL_ENV="C:\Users\user\OneDrive\المستندات\GitHub\ML\venv"
+>>>>>>> Stashed changes
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

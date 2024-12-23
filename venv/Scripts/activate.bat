@@ -16,7 +16,11 @@ if defined _OLD_CODEPAGE (
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 set VIRTUAL_ENV=C:\Users\yaqee\Desktop\ML\ML\venv
+=======
+set VIRTUAL_ENV=C:\Users\user\OneDrive\المستندات\GitHub\ML\venv
+>>>>>>> Stashed changes
 =======
 set VIRTUAL_ENV=C:\Users\user\OneDrive\المستندات\GitHub\ML\venv
 >>>>>>> Stashed changes

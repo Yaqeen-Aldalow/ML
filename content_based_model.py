@@ -19,7 +19,24 @@ def get_recommendations(title, cosine_sim=cosine_sim):
     movie_indices = [i[0] for i in sim_scores]
     return movies_df['title'].iloc[movie_indices]
 
-print(get_recommendations('Deadpool & Wolverine'))
-recommendations = get_recommendations('Deadpool & Wolverine')
-plt.hist(recommendations, bins=10, edgecolor='k')
-plt.show() 
+all_recommendations = []
+
+for title in movies_df['title']:
+    try:
+        recommendations = get_recommendations(title)
+        all_recommendations.extend(recommendations)
+    except Exception as e:
+        print(f"Error with title {title}: {e}")
+
+recommendations_df = pd.DataFrame(all_recommendations, columns=['title'])
+recommendations_count = recommendations_df['title'].value_counts()
+
+top_recommendations = recommendations_count.head(20)
+plt.figure(figsize=(12, 6))
+top_recommendations.plot(kind='bar', edgecolor='k', width=0.8)
+plt.title('Top 20 Recommended Movies')
+plt.xlabel('Movies')
+plt.ylabel('Frequency of Recommendation')
+plt.xticks(rotation=90)
+plt.tight_layout()
+plt.show()

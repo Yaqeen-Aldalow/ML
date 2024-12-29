@@ -31,3 +31,4 @@ recall = recall_score(true_labels, predicted_labels, zero_division=1)
 
 print(f"Precision for Collaborative Filtering (KNN): {precision}")
 print(f"Recall for Collaborative Filtering (KNN): {recall}")
+

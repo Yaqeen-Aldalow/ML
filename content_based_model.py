@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
+import matplotlib.pyplot as plt
 
 movies_df = pd.read_csv("clean_movies.csv")
 
@@ -19,3 +20,6 @@ def get_recommendations(title, cosine_sim=cosine_sim):
     return movies_df['title'].iloc[movie_indices]
 
 print(get_recommendations('Deadpool & Wolverine'))
+recommendations = get_recommendations('Deadpool & Wolverine')
+plt.hist(recommendations, bins=10, edgecolor='k')
+plt.show()

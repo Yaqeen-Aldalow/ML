@@ -3,6 +3,8 @@ from surprise import Dataset, Reader
 from surprise.model_selection import train_test_split
 from surprise import accuracy
 from surprise import KNNBasic
+import matplotlib.pyplot as plt
+
 
 ratings_df = pd.read_csv("clean_ratings.csv")
 
@@ -17,6 +19,13 @@ knn_model.fit(trainset)
 knn_predictions = knn_model.test(testset)
 knn_rmse = accuracy.rmse(knn_predictions)
 knn_mae = accuracy.mae(knn_predictions)
+
+plt.hist([pred.est for pred in knn_predictions], bins=30, edgecolor='k')
+plt.title('Distribution of Predicted Ratings')
+plt.xlabel('Predicted Rating')
+plt.ylabel('Frequency')
+plt.show()
+
 
 print(f"RMSE for Collaborative Filtering (KNN): {knn_rmse}")
 print(f"MAE for Collaborative Filtering (KNN): {knn_mae}")

@@ -6,33 +6,27 @@ from surprise import KNNBasic, SVD
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-# تحميل البيانات النظيفة
 movies_df = pd.read_csv("clean_movies.csv")
 ratings_df = pd.read_csv("clean_ratings.csv")
 users_df = pd.read_csv("clean_users.csv")
 
-# تحضير البيانات لاستخدامها مع surprise
 reader = Reader(rating_scale=(1, 5))
 data = Dataset.load_from_df(ratings_df[['user_id', 'movie_id', 'rating']], reader)
 
-# تقسيم البيانات إلى مجموعة تدريب واختبار (80% تدريب و 20% اختبار)
 trainset, testset = train_test_split(data, test_size=0.2)
 
-# تقييم نموذج Collaborative Filtering (KNN)
 knn_model = KNNBasic()
 knn_model.fit(trainset)
 knn_predictions = knn_model.test(testset)
 knn_rmse = accuracy.rmse(knn_predictions)
 knn_mae = accuracy.mae(knn_predictions)
 
-# تقييم نموذج Matrix Factorization (SVD)
 svd_model = SVD()
 svd_model.fit(trainset)
 svd_predictions = svd_model.test(testset)
 svd_rmse = accuracy.rmse(svd_predictions)
 svd_mae = accuracy.mae(svd_predictions)
 
-# تقييم نموذج Content-Based Filtering
 tfidf = TfidfVectorizer(stop_words='english')
 movies_df['genres'] = movies_df['genre_ids'].fillna('')
 tfidf_matrix = tfidf.fit_transform(movies_df['genres'])
@@ -60,15 +54,15 @@ def content_based_predictions(testset):
             if count > 0:
                 predicted_rating /= count
         except:
-            predicted_rating = 3  # افتراض تصنيف افتراضي في حال عدم العثور على توصية
-        predictions.append((uid, iid, true_ratings, predicted_rating, None))  # إضافة None لتكملة القيم المطلوبة
+            predicted_rating = 3
+        predictions.append((uid, iid, true_ratings, predicted_rating, None))  
     return predictions
 
 content_based_predictions_result = content_based_predictions(testset)
 content_based_rmse = accuracy.rmse(content_based_predictions_result)
 content_based_mae = accuracy.mae(content_based_predictions_result)
 
-# طباعة النتائج
+
 print(f"RMSE for Collaborative Filtering (KNN): {knn_rmse}")
 print(f"MAE for Collaborative Filtering (KNN): {knn_mae}")
 print(f"RMSE for Matrix Factorization (SVD): {svd_rmse}")

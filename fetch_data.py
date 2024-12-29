@@ -1,10 +1,8 @@
 import requests
 import pandas as pd
 
-# مفتاح الـ API الخاص بك
 API_KEY = "baa5d22412ad3ae24bd003e2c28afccc"
 
-# قاعدة URL للـ API
 BASE_URL = "https://api.themoviedb.org/3"
 
 def fetch_movies(genre_id, page=1):
@@ -45,10 +43,10 @@ def save_to_csv(movies, filename="movies.csv"):
     print(f"Movies saved to {filename}")
 
 if __name__ == "__main__":
-    genre_id = 35  # يمكن تغيير الـ genre_id حسب الحاجة
+    genre_id = 35  
     all_movies = []
     
-    for page in range(1, 6):  # جلب 5 صفحات
+    for page in range(1, 6):  
         data = fetch_movies(genre_id, page)
         if data:
             all_movies.extend(data["results"])

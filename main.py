@@ -12,12 +12,10 @@ app.add_middleware(SessionMiddleware, secret_key="super-secret-key")
 
 templates = Jinja2Templates(directory="templates")
 
-# تحميل البيانات النظيفة
 movies_df = pd.read_csv("clean_movies.csv")
 ratings_df = pd.read_csv("clean_ratings.csv")
 users_df = pd.read_csv("clean_users.csv")
 
-# تأكد من وجود روابط صحيحة للصور
 def complete_poster_path(path):
     if pd.isna(path) or not path.startswith('/'):
         return 'https://via.placeholder.com/500x750.png?text=No+Image+Available'

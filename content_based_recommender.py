@@ -7,18 +7,14 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 app = FastAPI()
 
-# تحميل البيانات النظيفة
 movies_df = pd.read_csv("clean_movies.csv")
 
-# تحويل الأنواع (genres) إلى تمثيل عددي باستخدام TF-IDF
 tfidf = TfidfVectorizer(stop_words='english')
 movies_df['genres'] = movies_df['genre_ids'].fillna('')
 tfidf_matrix = tfidf.fit_transform(movies_df['genres'])
 
-# حساب التشابه باستخدام Cosine Similarity
 cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
-# دالة للحصول على الأفلام الأكثر تشابهًا مع فيلم معين
 def get_recommendations(title, cosine_sim=cosine_sim):
     try:
         idx = movies_df.index[movies_df['title'] == title].tolist()[0]

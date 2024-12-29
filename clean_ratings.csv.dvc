@@ -1,0 +1,5 @@
+outs:
+- md5: 63c522e8c498eb7a454a18f50719189c
+  size: 32555
+  hash: md5
+  path: clean_ratings.csv

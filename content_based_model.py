@@ -22,4 +22,4 @@ def get_recommendations(title, cosine_sim=cosine_sim):
 print(get_recommendations('Deadpool & Wolverine'))
 recommendations = get_recommendations('Deadpool & Wolverine')
 plt.hist(recommendations, bins=10, edgecolor='k')
-plt.show()
+plt.show() 

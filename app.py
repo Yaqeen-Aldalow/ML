@@ -14,20 +14,18 @@ def index():
 @app.route('/get_recommendations', methods=['POST'])
 def get_recommendations():
     try:
-        user_id = request.form.get('user_id', type=int)  # الحصول على user_id من النموذج
-        n_recommendations = request.form.get('n_recommendations', 5, type=int)  # الحصول على عدد التوصيات (افتراضي 5)
+        user_id = request.form.get('user_id', type=int) 
+        n_recommendations = request.form.get('n_recommendations', 5, type=int)  
         
-        # إرسال الطلب إلى FastAPI
+        
         response = requests.post(
-            f"{API_URL}/recommend/",  # الإتصال بـ FastAPI
+            f"{API_URL}/recommend/",  
             json={"user_id": user_id, "n_recommendations": n_recommendations}
         )
-        response.raise_for_status()  # تأكد من رفع الاستثناء إذا كان هناك خطأ
-        
-        # الحصول على التوصيات
+        response.raise_for_status() 
+
         recommendations = response.json()
-        return jsonify(recommendations)  # إرجاع التوصيات لـ Flask
-        
+        return jsonify(recommendations)  
     except requests.exceptions.RequestException as e:
         return jsonify({"error": f"Request to FastAPI failed: {str(e)}"}), 500
     except Exception as e:

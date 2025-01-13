@@ -4,8 +4,7 @@ import requests
 
 app = Flask(__name__)
 
-# API URL الخاص بـ FastAPI
-API_URL = "http://localhost:8000"  # تأكد من أن FastAPI يعمل على هذا المنفذ
+API_URL = "http://localhost:8000"  
 
 @app.route('/')
 def index():

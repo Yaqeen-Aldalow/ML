@@ -23,15 +23,12 @@ def complete_poster_path(path):
 
 movies_df['poster_path'] = movies_df['poster_path'].apply(complete_poster_path)
 
-# تحويل الأنواع (genres) إلى تمثيل عددي باستخدام TF-IDF
 tfidf = TfidfVectorizer(stop_words='english')
 movies_df['genres'] = movies_df['genre_ids'].fillna('')
 tfidf_matrix = tfidf.fit_transform(movies_df['genres'])
 
-# حساب التشابه باستخدام Cosine Similarity
 cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
-# دالة للحصول على الأفلام الأكثر تشابهًا مع فيلم معين
 def get_recommendations(title, cosine_sim=cosine_sim):
     try:
         idx = movies_df.index[movies_df['title'] == title].tolist()[0]
@@ -49,7 +46,7 @@ async def login_page(request: Request):
 
 @app.post("/login", response_class=HTMLResponse)
 async def login(request: Request, username: str = Form(...), password: str = Form(...)):
-    global users_df, ratings_df  # تأكد من تحميل البيانات الصحيحة في النطاق العالمي
+    global users_df, ratings_df  
     try:
         request.session["username"] = username
         if username not in users_df['user_id'].values:
@@ -57,7 +54,7 @@ async def login(request: Request, username: str = Form(...), password: str = For
             users_df = pd.concat([users_df, new_user], ignore_index=True)
             users_df.to_csv('clean_users.csv', index=False)
         search_history = ratings_df[ratings_df['user_id'] == username]['movie_id'].tolist()
-        request.session["search_history"] = [int(x) for x in search_history]  # Convert int64 to int
+        request.session["search_history"] = [int(x) for x in search_history]
         return RedirectResponse(url="/home", status_code=302)
     except Exception as e:
         return HTMLResponse(content=f"Error during login: {e}", status_code=500)
@@ -69,7 +66,7 @@ async def logout(request: Request):
 
 @app.get("/home", response_class=HTMLResponse)
 async def home_page(request: Request):
-    global movies_df  # تأكد من تحميل البيانات الصحيحة في النطاق العالمي
+    global movies_df 
     try:
         username = request.session.get("username")
         if not username:
@@ -91,7 +88,7 @@ async def home_page(request: Request):
 
 @app.post("/recommend", response_class=HTMLResponse)
 async def recommend_movies(request: Request, title: str = Form(...)):
-    global movies_df, ratings_df  # تأكد من تحميل البيانات الصحيحة في النطاق العالمي
+    global movies_df, ratings_df  
     try:
         if title not in movies_df['title'].values:
             raise HTTPException(status_code=404, detail="Movie not found")

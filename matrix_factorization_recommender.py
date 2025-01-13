@@ -29,7 +29,7 @@ def get_all_predictions():
     for user_id in ratings_df['user_id'].unique():
         for movie_id in ratings_df['movie_id'].unique():
             prediction = svd_model.predict(user_id, movie_id)
-            all_predictions.append(prediction.est)  # نضيف التنبؤ بالتقييم
+            all_predictions.append(prediction.est) 
             
     return all_predictions
 

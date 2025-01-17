@@ -1,4 +1,6 @@
 [core]
-    remote = storage
+    remote = myremote
 ['remote "storage"']
     url = s3://my-bucket/path
+['remote "myremote"']
+    url = gdrive://<17KOkThvpuNlktY9WcysLIETe8lAiQCrh>

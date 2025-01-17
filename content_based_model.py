@@ -40,3 +40,42 @@ plt.ylabel('Frequency of Recommendation')
 plt.xticks(rotation=90)
 plt.tight_layout()
 plt.show()
+
+
+# تحميل بيانات التقييمات
+ratings_df = pd.read_csv("clean_ratings.csv")
+
+recommended_df = pd.merge(
+    pd.DataFrame(all_recommendations, columns=["title"]),
+    movies_df[['title', 'id']],
+    on='title',
+    how='left'
+).rename(columns={'id': 'movie_id'})
+
+print(f"Number of movies in it: {len(recommended_df)}")
+
+# دمج التوصيات مع التقييمات بناءً على movie_id
+merged_df = pd.merge(ratings_df, recommended_df, on='movie_id', how='inner')
+print(f"Number of recommended and rated movies: {merged_df.shape[0]}")
+
+# حساب True Positives: الأفلام الموصى بها وتقييمها > 3
+true_positive = merged_df[merged_df['rating'] > 3].shape[0]
+
+# حساب False Positives: الأفلام الموصى بها وتقييمها ≤ 3
+false_positive = merged_df[merged_df['rating'] <= 3].shape[0]
+
+# حساب False Negatives: الأفلام التي لم يُوصى بها لكنها تقييمها > 3
+recommended_movie_ids = recommended_df['movie_id'].unique()
+false_negative = ratings_df[
+    (ratings_df['rating'] > 3) & (~ratings_df['movie_id'].isin(recommended_movie_ids))
+].shape[0]
+
+print(f"True Positive: {true_positive}")
+print(f"False Positive: {false_positive}")
+print(f"False Negative: {false_negative}")
+
+precision = true_positive / (true_positive + false_positive) if (true_positive + false_positive) > 0 else 0
+recall = true_positive / (true_positive + false_negative) if (true_positive + false_negative) > 0 else 0
+
+print(f"Precision: {precision:.2f}")
+print(f"Recall: {recall:.2f}")
